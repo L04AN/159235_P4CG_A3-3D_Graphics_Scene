@@ -99,7 +99,15 @@ If your local repository becomes out of sync (e.g., files missing, or you just w
 git fetch origin
 git reset --hard origin/main
 ```
+---
 
+### 🗑️ Removing Unwanted Repo Files
+
+```bash
+git -rm -r --cached .idea (".idea" for example)
+git commit -m "Removed unwanted .idea file from repo"
+git push origin main
+```
 
 ## ✅ Golden Workflow for Co-Developing
 1. `git checkout main`  
