@@ -89,5 +89,63 @@ class Square extends Plane {
 Provide an implementation for ray shooting onto a Spherical surface
  */
 
-// class Sphere extends SurfaceGeometry  ...
+class Sphere extends SurfaceGeometry {
+    private final double radius = 0.5; // Unit sphere
+    private final Point4 center = Point4.createPoint(0, 0, 0);
+
+    @Override
+    public boolean shoot(Ray ray, HitRecord hit) {
+        Point4 p0 = ray.pOrigin;
+        Point4 p1 = ray.pDest;
+        Point4 d = p1.minus(p0); // Ray direction
+        Point4 oc = p0.minus(center); // Origin to center
+
+        // Quadratic equation coefficients: at² + bt + c = 0
+        double a = Point4.dot(d, d);
+        double b = 2.0 * Point4.dot(oc, d);
+        double c = Point4.dot(oc, oc) - radius * radius;
+
+        double discriminant = b * b - 4 * a * c;
+
+        if (discriminant < 0) {
+            hit.isHit = false;
+            return false;
+        }
+
+        // Find closest positive intersection
+        double sqrt_disc = Math.sqrt(discriminant);
+        double t1 = (-b - sqrt_disc) / (2 * a);
+        double t2 = (-b + sqrt_disc) / (2 * a);
+
+        double t = (t1 > TINY) ? t1 : t2;
+
+        if (t <= TINY) {
+            hit.isHit = false;
+            return false;
+        }
+
+        hit.tHit = t;
+        hit.pSurface = ray.calculate(t);
+
+        // Normal vector (pointing outward)
+        Point4 normal = hit.pSurface.minus(center);
+        normal.normalize();
+        hit.vNormal = normal;
+
+        // Spherical texture coordinates
+        double theta = Math.atan2(normal.z, normal.x);
+        double phi = Math.acos(normal.y);
+        hit.u = (theta + Math.PI) / (2 * Math.PI);
+        hit.v = phi / Math.PI;
+
+        hit.isShaded = true;
+        hit.isHit = true;
+        return true;
+    }
+
+    @Override
+    public BoundingBox getBB() {
+        return new BoundingBox(-radius, radius, -radius, radius, -radius, radius);
+    }
+}
 
