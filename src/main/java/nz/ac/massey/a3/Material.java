@@ -22,4 +22,24 @@ public class Material {
 
     Define methods and parameters as you see fit.
      */
+
+    public double calculate(Point4 vNormal, Point4 vLight, Point4 vView, double shadowFactor) {
+        vNormal.normalize();
+        vLight.normalize();
+        vView.normalize();
+
+        // Ambient component
+        double ambient = alpha;
+
+        // Diffuse component
+        double diffuse = Math.max(0, Point4.dot(vNormal, vLight));
+
+        // Specular component
+        Point4 vReflect = vLight.minus(vNormal, 2.0 * Point4.dot(vLight, vNormal));
+        vReflect.normalize();
+        double specular = Math.pow(Math.max(0, Point4.dot(vReflect, vView)), nShiny);
+
+        return Math.min(1.0, ambient + shadowFactor * (beta * diffuse + (1.0 - beta) * specular));
+    }
+
 }
