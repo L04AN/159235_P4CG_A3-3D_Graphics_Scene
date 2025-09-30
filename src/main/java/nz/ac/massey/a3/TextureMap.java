@@ -5,6 +5,9 @@ package nz.ac.massey.a3;
  */
 
 import java.awt.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class TextureMap {
 
@@ -19,6 +22,31 @@ public class TextureMap {
 
      */
 
-    public Color pickColour(double u, double v) { return Color.BLACK;}
+    //public Color pickColour(double u, double v) { return Color.BLACK;}
+
+    private BufferedImage texture;
+
+    public TextureMap(String filename) {
+        try {
+            texture = ImageIO.read(new File(filename));
+        } catch (Exception e) {
+            System.err.println("Could not load texture: " + filename);
+            texture = null;
+        }
+    }
+
+    public Color pickColour(double u, double v) {
+        if (texture == null) return Color.BLACK;
+
+        // Clamp and convert to pixel coordinates
+        u = Math.max(0, Math.min(1, u));
+        v = Math.max(0, Math.min(1, v));
+
+        int x = (int)(u * (texture.getWidth() - 1));
+        int y = (int)(v * (texture.getHeight() - 1));
+
+        int rgb = texture.getRGB(x, y);
+        return new Color(rgb);
+    }
 
 }
