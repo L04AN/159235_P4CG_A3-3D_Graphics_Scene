@@ -84,9 +84,11 @@ public class ThreeDSurface {
 
             // Shadow form factor
             //double ff = FEEL_SHADOWS ? Shadows.feel(surfaces, pSurfaceW, pLightW) : 1.0;
+            double ff = 1.0; // shadowFactor
 
             // Shading factor
             //double fShade = SHADING_ON ? material.calculate(vNormalW, vLightW, vViewW, ff) : 1.0;
+            double fShade = material.calculate(vNormalW, vLightW, vViewW, ff);
 
             double fShade = 1.0;
             Color c1 = surfaceColour.pickColour(hit.u, hit.v);
