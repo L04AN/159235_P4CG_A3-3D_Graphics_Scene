@@ -90,7 +90,7 @@ public class ThreeDSurface {
             //double fShade = SHADING_ON ? material.calculate(vNormalW, vLightW, vViewW, ff) : 1.0;
             double fShade = material.calculate(vNormalW, vLightW, vViewW, ff);
 
-            double fShade = 1.0;
+            //double fShade = 1.0;
             Color c1 = surfaceColour.pickColour(hit.u, hit.v);
             sr.colour = rescaleColour(c1, fShade);
             sr.pSurface = placement.toWorld(hit.pSurface);

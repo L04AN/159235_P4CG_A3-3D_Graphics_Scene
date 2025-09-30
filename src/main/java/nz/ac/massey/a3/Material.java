@@ -35,7 +35,12 @@ public class Material {
         double diffuse = Math.max(0, Point4.dot(vNormal, vLight));
 
         // Specular component
-        Point4 vReflect = vLight.minus(vNormal, 2.0 * Point4.dot(vLight, vNormal));
+        double dotNL = Point4.dot(vNormal, vLight);
+        Point4 vReflect = Point4.createVector(
+                2.0 * dotNL * vNormal.x - vLight.x,
+                2.0 * dotNL * vNormal.y - vLight.y,
+                2.0 * dotNL * vNormal.z - vLight.z
+        );
         vReflect.normalize();
         double specular = Math.pow(Math.max(0, Point4.dot(vReflect, vView)), nShiny);
 

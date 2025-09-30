@@ -138,7 +138,6 @@ class Sphere extends SurfaceGeometry {
         hit.u = (theta + Math.PI) / (2 * Math.PI);
         hit.v = phi / Math.PI;
 
-        hit.isShaded = true;
         hit.isHit = true;
         return true;
     }
