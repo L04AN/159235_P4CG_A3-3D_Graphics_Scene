@@ -36,6 +36,26 @@ public class Placement {
      */
     public static Placement placeModel(Point4 pD, Point4 pA, Point4 pS) {
         Placement p = new Placement();
+
+        // Create transformation matrices
+        Matrix4 T = Matrix4.createDisplacement(pD.x, pD.y, pD.z);
+        Matrix4 Rx = Matrix4.createRotationX(pA.x);
+        Matrix4 Ry = Matrix4.createRotationY(pA.y);
+        Matrix4 Rz = Matrix4.createRotationZ(pA.z);
+        Matrix4 S = Matrix4.createScale(pS.x, pS.y, pS.z);
+
+        // Local to World: T * Rz * Ry * Rx * S
+        p.tLW = T.times(Rz.times(Ry.times(Rx.times(S))));
+
+        // World to Local is the inverse (reverse order, inverse operations)
+        Matrix4 Sinv = Matrix4.createScale(1.0/pS.x, 1.0/pS.y, 1.0/pS.z);
+        Matrix4 Rxinv = Matrix4.createRotationX(-pA.x);
+        Matrix4 Ryinv = Matrix4.createRotationY(-pA.y);
+        Matrix4 Rzinv = Matrix4.createRotationZ(-pA.z);
+        Matrix4 Tinv = Matrix4.createDisplacement(-pD.x, -pD.y, -pD.z);
+
+        p.tWL = Sinv.times(Rxinv.times(Ryinv.times(Rzinv.times(Tinv))));
+
         return p;
     }
 
